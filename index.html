@@ -31,7 +31,6 @@
         
         .req-id { font-weight: bold; color: #e67e22; background: #fff3e0; padding: 2px 6px; border-radius: 4px; margin-right: 8px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; }
         
-        /* Responsiveness */
         @media (max-width: 1000px) { body { flex-direction: column; } #sidebar { width: 100%; height: auto; } }
     </style>
 </head>
@@ -39,93 +38,64 @@
 
 <div id="sidebar">
     <h2>E-Banker SRS</h2>
-    <input type="text" id="search-input" class="search-box" placeholder="🔍 Search Sections or Bullets..." onkeyup="filterNav()">
+    <input type="text" id="search-input" class="search-box" placeholder="🔍 Search Sections..." onkeyup="filterNav()">
     <div id="nav-container"></div>
 </div>
 
 <div id="main">
     <div id="content-view" class="srs-card">
         <h1>VGIL CBS Knowledge Base</h1>
-        <p>Welcome, Select a section from the left to view granular requirements, business logic, and interface specifications for the E-Banker system.</p>
-        <p><strong>Quick Navigation Tip:</strong> Sections 1-3 cover the Project Foundation, while Sections 4-6 cover technical and functional depth.</p>
+        <p>Select a section from the left to view the E-Banker Core Banking Specification.</p>
     </div>
 </div>
 
 <script>
-    // THE CONTENT DATABASE (Sections 1, 2, 3, 4, 5, 6)
     const srsData = [
         {
             id: "sec-1",
             title: "1. Executive Summary",
-            intro: "High-level overview of the Banker® CBS module objectives and strategic outcomes.",
+            intro: `The E-Banker (Banker®) Core Banking Solution is a comprehensive, multi-tenant financial platform designed to provide a unified digital backbone for diverse financial institutions, including Commercial Banks, UCBs, DCCBs, NBFCs, and Cooperative Societies (SACCOS).`,
             bullets: [
-                "Objective: To deliver a highly scalable, multi-tenant Core Banking Solution for UCBs and NBFCs.",
-                "Primary Outcome: Real-time transaction processing with Zero Data Loss (RPO=0).",
-                "Compliance: Out-of-the-box adherence to RBI IRAC norms and FIU-IND AML reporting.",
-                "Target Architecture: 3-Tier architecture (Angular, Python, Oracle) with ESB integration."
+                "<strong>Regulatory Resilience:</strong> Automated compliance with RBI IRAC norms, AML/KYC scrutiny, and localized reporting.",
+                "<strong>Operational Efficiency:</strong> Reducing Time-to-Market for new loan products through integrated LOS.",
+                "<strong>Security by Design:</strong> Multi-layered defense including SIM-binding and mandatory Maker-Checker lifecycle.",
+                "<strong>Interoperability:</strong> Seamless integration with national payment ecosystems (NPCI, RTGS, NEFT)."
             ]
-            <p> <strong> Overview:<strong/> The <strong>E-Banker (Banker®) Core Banking Solution<strong/> is a comprehensive, multi-tenant financial platform designed to provide a unified digital backbone for diverse financial institutions, including CBs (Commercial Bank), UCBs (Urban Co-operative Bank), DCCBs (District Central Co-operative Bank), Non-Banking Financial Company) NBFCs, and SACCOS (Savings and Credit Cooperative Societies).
-            </p>
         },
         {
             id: "sec-2",
             title: "2. Introduction",
-            intro: "Document purpose, scope, and intended audience for the E-Banker project.",
+            intro: "Master Specification for development, deployment, and auditing of the E-Banker CBS module.",
             bullets: [
-                "Purpose: Serves as the master technical blueprint for development and auditing.",
-                "Scope: Covers Core Services (CASA/Loans), Digital Channels, and Back-Office Operations.",
-                "Conventions: Every requirement is uniquely identified (e.g., REQ-XXX) for traceability.",
-                "Reading Suggestions: Developers should focus on Sec 4 & 5; Auditors on Sec 6 & 7."
+                "Provides a clear roadmap for developers, admins, and regulatory auditors.",
+                "Scope includes end-to-end banking operations (CASA, Loans, Deposits).",
+                "Includes conventions for requirement IDs to ensure 100% audit traceability."
             ]
         },
         {
             id: "sec-3",
             title: "3. System Description",
-            intro: "Architectural foundation and technology stack overview.",
+            intro: "Architectural overview of the 3-Tier E-Banker platform.",
             bullets: [
-                "Web Tier: Developed using Angular JS for a responsive, single-page interface.",
-                "Application Tier: Python REST APIs (Flask/FastAPI) managing business logic and engines.",
-                "Database Tier: Oracle RDBMS providing ACID-compliant storage and immutable audit trails.",
-                "Replication: Oracle Data Guard used for real-time Primary-to-DR site synchronization."
+                "Web Tier: Angular JS for high-performance single-page interaction.",
+                "Application Tier: Python REST APIs (Flask/FastAPI) managing business logic.",
+                "Data Tier: Oracle RDBMS providing ACID-compliant financial storage.",
+                "Replication: Oracle Data Guard for real-time DR site synchronization."
             ]
         },
         {
             id: "sec-4",
             title: "4. Functional Requirements",
-            intro: "Detailed business rules and automated logic for financial products.",
+            intro: "Core business logic for banking products and automated processes.",
             bullets: [
-                "<span class='req-id'>4.1.1</span> Liability Products: Support for multi-tier interest calculation and automated sweep-in/out logic.",
-                "<span class='req-id'>4.1.2</span> Asset Products: Automated Loan Origination (LOS) with real-time CIBIL fetching.",
-                "<span class='req-id'>4.1.2-NPA</span> Compliance Logic: SMA-0, 1, 2 flagging at 30/60/90 days overdue.",
-                "<span class='req-id'>4.1.3</span> Remittances: Real-time NPCI gateway integration for IMPS, RTGS, and NEFT.",
-                "<span class='req-id'>4.3.1</span> Maker-Checker: Mandatory dual-control for transactions exceeding defined supervisor limits."
-            ]
-        },
-        {
-            id: "sec-5",
-            title: "5. External Interfaces",
-            intro: "Requirements for hardware, software, and communication protocols.",
-            bullets: [
-                "Hardware: Integration with Biometric Scanners (Aadhaar) and Thermal Receipt Printers.",
-                "Software: API hooks for Credit Bureaus, SMS Gateways, and Email Servers.",
-                "Protocols: Implementation of ISO 20022 for financial messaging.",
-                "Security: Hardware binding via MAC ID and IP address whitelisting for branch terminals."
-            ]
-        },
-        {
-            id: "sec-6",
-            title: "6. Non-Functional Requirements",
-            intro: "Performance, reliability, and security benchmarks.",
-            bullets: [
-                "Performance: Support for 500+ Concurrent Users with < 2s response time.",
-                "Availability: 99.9% system uptime excluding scheduled maintenance windows.",
-                "Audit: Immutable logs of all 'Maker' and 'Checker' actions with timestamps.",
-                "Scalability: Stateless API design allowing horizontal scaling across multiple servers."
+                "<span class='req-id'>4.1.1</span> Liability Products: Multi-tier interest and sweep-in/out logic.",
+                "<span class='req-id'>4.1.2</span> Asset Products: Loan Origination with real-time CIBIL fetch.",
+                "<span class='req-id'>4.1.2-NPA</span> Automated NPA logic (SMA-0, 1, 2) based on RBI IRAC norms.",
+                "<span class='req-id'>4.1.3</span> Remittances: NPCI integration for IMPS, RTGS, and NEFT."
             ]
         }
     ];
 
-    // Function to render the sidebar navigation
     function renderNav(data = srsData) {
         const container = document.getElementById('nav-container');
         container.innerHTML = data.map(section => `
@@ -135,29 +105,24 @@
         `).join('');
     }
 
-    // Function to display the selected section
     function viewSection(id) {
         const section = srsData.find(s => s.id === id);
         const display = document.getElementById('content-view');
         
-        // Mark active in sidebar
         document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        document.getElementById(`nav-${id}`).classList.add('active');
+        const activeNav = document.getElementById(`nav-${id}`);
+        if(activeNav) activeNav.classList.add('active');
 
-        // Build bulleted HTML
         const bulletHtml = section.bullets.map(b => `<li>${b}</li>`).join('');
 
         display.innerHTML = `
             <h1>${section.title}</h1>
             <div class="intro-text">${section.intro}</div>
             <ul>${bulletHtml}</ul>
-            <div style="margin-top:30px; border-top:1px solid #eee; padding-top:20px;">
-                <button onclick="window.scrollTo(0,0)" style="padding:10px 15px; cursor:pointer; background:var(--primary); color:white; border:none; border-radius:4px;">Back to Top</button>
-            </div>
+            <button onclick="window.scrollTo(0,0)" style="margin-top:20px; padding:8px 12px; cursor:pointer;">Back to Top</button>
         `;
     }
 
-    // Function to filter the list based on search
     function filterNav() {
         const query = document.getElementById('search-input').value.toLowerCase();
         const filtered = srsData.filter(s => 
@@ -167,11 +132,9 @@
         renderNav(filtered);
     }
 
-    // Initial Load
-    renderNav();
+    // Crucial: Call renderNav on load
+    window.onload = renderNav;
 </script>
 
 </body>
 </html>
-
-
