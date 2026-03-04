@@ -2,112 +2,212 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VGIL E-Banker Master Wiki</title>
     <style>
-        :root { --sidebar-bg: #2c3e50; --accent: #3498db; --text: #333; }
-        body { font-family: 'Segoe UI', sans-serif; display: flex; margin: 0; height: 100vh; color: var(--text); }
+        :root { --sidebar-bg: #2c3e50; --accent: #3498db; --text: #333; --light-bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; margin: 0; height: 100vh; color: var(--text); background: var(--light-bg); }
         
         /* Sidebar Navigation */
-        #sidebar { width: 300px; background: var(--sidebar-bg); color: white; padding: 20px; overflow-y: auto; flex-shrink: 0; }
-        .nav-group { font-weight: bold; color: var(--accent); margin: 20px 0 10px 0; font-size: 0.9em; text-transform: uppercase; }
-        .nav-link { display: block; padding: 10px; color: #bdc3c7; text-decoration: none; cursor: pointer; border-radius: 4px; }
-        .nav-link:hover { background: #34495e; color: white; }
+        #sidebar { width: 320px; background: var(--sidebar-bg); color: white; padding: 20px; overflow-y: auto; flex-shrink: 0; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+        #sidebar h2 { font-size: 1.4em; margin-bottom: 20px; border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
+        .nav-group { font-weight: bold; color: var(--accent); margin: 25px 0 10px 0; font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-link { display: block; padding: 10px 15px; color: #bdc3c7; text-decoration: none; cursor: pointer; border-radius: 4px; transition: 0.2s; font-size: 0.95em; line-height: 1.4; }
+        .nav-link:hover { background: #34495e; color: white; padding-left: 20px; }
         .nav-link.active { background: var(--accent); color: white; }
 
-        /* Content Area (The Editor Feel) */
-        #content-area { flex-grow: 1; padding: 60px; overflow-y: auto; line-height: 1.7; background: #fff; }
-        .content-body { max-width: 800px; margin: 0 auto; }
-        h1 { font-size: 2.5em; color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        h2 { color: var(--accent); margin-top: 30px; }
-        p { margin-bottom: 20px; font-size: 1.1em; }
-        ul { padding-left: 20px; }
-        li { margin-bottom: 10px; }
+        /* Content Area */
+        #content-area { flex-grow: 1; padding: 60px; overflow-y: auto; line-height: 1.8; background: #fff; }
+        .content-body { max-width: 900px; margin: 0 auto; }
+        
+        h1 { font-size: 2.2em; color: #2c3e50; border-bottom: 3px solid var(--accent); padding-bottom: 10px; margin-bottom: 30px; }
+        h2 { color: var(--sidebar-bg); margin-top: 40px; border-left: 5px solid var(--accent); padding-left: 15px; font-size: 1.5em; }
+        h3 { color: #2980b9; margin-top: 25px; font-size: 1.2em; }
+        
+        p { margin-bottom: 20px; font-size: 1.05em; text-align: justify; }
+        ul { padding-left: 25px; margin-bottom: 25px; }
+        li { margin-bottom: 12px; position: relative; }
+        
         strong { color: #000; }
-        .note-box { background: #fdfae3; border-left: 5px solid #f1c40f; padding: 15px; margin: 20px 0; }
+        .req-id { font-weight: bold; color: #e67e22; background: #fff3e0; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+        
+        /* Table Styles for Appendix/Analysis */
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #fff; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #f8f9fa; color: var(--sidebar-bg); }
+
+        .note-box { background: #fdfae3; border-left: 5px solid #f1c40f; padding: 20px; margin: 30px 0; border-radius: 4px; }
+        
+        @media (max-width: 1100px) { body { flex-direction: column; } #sidebar { width: 100%; height: auto; } }
     </style>
 </head>
 <body>
 
 <div id="sidebar">
-    <h2 style="color:white; margin-top:0;">E-Banker Wiki</h2>
+    <h2>E-Banker Wiki</h2>
     
-    <div class="nav-group">Project Foundation</div>
+    <div class="nav-group">Foundation</div>
     <div class="nav-link" onclick="loadPage('sec1')">1. Executive Summary</div>
     <div class="nav-link" onclick="loadPage('sec2')">2. Introduction</div>
-    <div class="nav-link" onclick="loadPage('sec3')">3. System Description</div>
+    <div class="nav-link" onclick="loadPage('sec3')">3. Overall Description</div>
 
-    <div class="nav-group">Functional Specs</div>
-    <div class="nav-link" onclick="loadPage('sec4')">4. Functional Requirements</div>
+    <div class="nav-group">Technical & Functional</div>
+    <div class="nav-link" onclick="loadPage('sec4')">4. System Features</div>
     <div class="nav-link" onclick="loadPage('sec5')">5. External Interfaces</div>
     <div class="nav-link" onclick="loadPage('sec6')">6. Non-Functional Req.</div>
+    <div class="nav-link" onclick="loadPage('sec7')">7. Other Requirements</div>
+
+    <div class="nav-group">Appendices</div>
+    <div class="nav-link" onclick="loadPage('sec8')">8. Appendix A & B</div>
 </div>
 
 <div id="content-area">
     <div id="display" class="content-body">
-        <h1>Welcome to E-Banker Wiki</h1>
-        <p>Please select a section from the sidebar to begin reviewing the Software Requirements Specification.</p>
+        <h1>VGIL E-Banker Master Wiki</h1>
+        <p>Welcome to the centralized knowledge base for the <strong>E-Banker Core Banking Solution</strong>. Use the sidebar to navigate through the full Software Requirements Specification (SRS).</p>
+        <div class="note-box">
+            <strong>Document Status:</strong> Version 1.0 (Pending Approval)<br>
+            <strong>Author:</strong> Vaibhav Selukar<br>
+            <strong>Date:</strong> 23-Feb-2026
+        </div>
     </div>
 </div>
 
 <script>
-    // WORDPRESS-STYLE CONTENT BLOCKS
-    // You can use standard HTML tags here: <h1>, <h2>, <p>, <ul>, <li>, <strong>, <em>
     const pages = {
         'sec1': `
             <h1>1. Executive Summary</h1>
-            <p>The <strong>E-Banker (Banker®)</strong> Core Banking Solution is a comprehensive, multi-tenant financial platform designed to provide a unified digital backbone for diverse financial institutions.</p>
-            <div class="note-box"><strong>Key Vision:</strong> To enable seamless digital banking for UCBs and NBFCs with zero hardware footprint at the branch level.</div>
-            <h2>Core Objectives</h2>
+            <p><strong>Overview:</strong> The E-Banker (Banker) Core Banking Solution is a comprehensive, multi-tenant financial platform designed to provide a unified digital backbone for diverse financial institutions, including Commercial Banks (CBs), Urban Co-operative Banks (UCBs), DCCBs, NBFCs, and SACCOS.</p>
+            <h3>Strategic Standing</h3>
             <ul>
-                <li><strong>Regulatory Resilience:</strong> Automated compliance with RBI IRAC norms.</li>
-                <li><strong>Operational Efficiency:</strong> Reducing time-to-market for new loan products.</li>
-                <li><strong>Security:</strong> Multi-layered defense including SIM-binding.</li>
+                <li><strong>Regulatory Resilience:</strong> Automated compliance with RBI's IRAC norms, AML/KYC scrutiny, and localized reporting (Form VIII, OSS, DNBS).</li>
+                <li><strong>Operational Efficiency:</strong> Reducing the "Time-to-Market" for new loan products through an integrated Loan Origination System (LOS) and automated Batch Processing (EOD/BOD).</li>
+                <li><strong>Security by Design:</strong> Implementing multi-layered defense mechanisms, including SIM-binding and mandatory Maker-Checker lifecycles.</li>
+                <li><strong>Interoperability:</strong> Seamless integration with national payment ecosystems (NPCI, RTGS, NEFT) via ESB architecture.</li>
             </ul>
+            <p><strong>Outcomes:</strong> Achieving < 2-second transaction response times and Zero-data loss (RPO=0) via synchronous DR replication.</p>
         `,
 
         'sec2': `
             <h1>2. Introduction</h1>
-            <p>This document serves as the master blueprint for the development and deployment of the CBS module.</p>
             <h2>2.1 Purpose</h2>
-            <p>The primary goal is to define the functional and non-functional requirements for Virtual Galaxy Infotech Limited’s flagship product.</p>
+            <p>This document serves as the single source of truth for the functional, non-functional, and technical requirements of the E-Banker platform, ensuring a shared understanding among stakeholders and development teams.</p>
+            <h3>Key Objectives:</h3>
+            <ul>
+                <li><strong>Define System Scope:</strong> End-to-end automation of retail and corporate banking.</li>
+                <li><strong>Establish Standards:</strong> Detail 24/7 high-volume processing and multi-channel delivery (ATMs, Mobile, Internet Banking).</li>
+                <li><strong>Guide Deployment:</strong> Technical specs for On-Premises and SaaS models.</li>
+            </ul>
+            <h2>2.2 CBS System Conventions</h2>
+            <ul>
+                <li><strong>Mandatory Fields:</strong> Indicated by a red first letter in the field caption.</li>
+                <li><strong>F4 Key:</strong> Accesses field-level help or search.</li>
+                <li><strong>F2 Key:</strong> Option to add new records in forms.</li>
+                <li><strong>F1 Key:</strong> Inquiry/Details retrieval for passbooks or accounts.</li>
+            </ul>
+            <h2>2.4 Scope</h2>
+            <p>E-Banker is a mission-critical centralized software suite engineered to automate the operational lifecycle of Banks, Co-operative Societies, and NBFCs.</p>
         `,
 
         'sec3': `
-            <h1>3. System Description</h1>
-            <p>E-Banker follows a modern 3-tier architecture designed for high availability.</p>
+            <h1>3. Overall Description</h1>
+            <h2>3.1 Product Perspective</h2>
+            <p>The E-Banker CBS is a web-based financial ecosystem designed as a self-contained product family that replaces legacy branch-level systems with a unified "One Bank" architecture.</p>
+            <h3>Major Component Interconnections:</h3>
             <ul>
-                <li><strong>Web Tier:</strong> Angular JS (Single Page Application).</li>
-                <li><strong>Logic Tier:</strong> Python REST APIs (Flask/FastAPI).</li>
-                <li><strong>Data Tier:</strong> Oracle RDBMS (ACID Compliant).</li>
+                <li><strong>Front-End (Interaction Layer):</strong> Built on <strong>Angular JS</strong> for web interfaces across devices.</li>
+                <li><strong>Application Server (Logic Layer):</strong> Utilizes <strong>Python (Rest API/Flask)</strong> for Process Managers like Interest Calculation and TDS.</li>
+                <li><strong>Data Layer:</strong> Centralized <strong>Oracle Database</strong> ensuring ACID compliance.</li>
+                <li><strong>Middleware:</strong> Enterprise Service Bus (ESB) for 3rd party integrations (SMS, CIBIL).</li>
+            </ul>
+            <h2>3.2 Product Features</h2>
+            <ul>
+                <li><strong>Customer Lifecycle (CIF):</strong> 360-degree view of customers with unified KYC.</li>
+                <li><strong>Dynamic Product Design:</strong> Define interest slabs and penalty conditions without code changes.</li>
+                <li><strong>Multi-Mode Engine:</strong> Handles Cash, Clearing, Transfers, and JVs with Maker-Checker workflows.</li>
             </ul>
         `,
 
         'sec4': `
-            <h1>4. Functional Requirements</h1>
-            <h2>4.1.1 Liability Products (CASA)</h2>
-            <p>The system supports full lifecycle management of Savings and Current accounts.</p>
+            <h1>4. System Features</h1>
+            <h2>4.1 Core Banking Services</h2>
+            <h3>4.1.1 Core Banking & Enterprise Information Systems</h3>
+            <p>The core engine manages the General Ledger (GL), Chart of Accounts, and multi-currency support.</p>
+            <h3>4.1.2 Presentation Services</h3>
+            <p>The responsive front-end handles user authentication and session management across desktops and mobile tablets.</p>
+            <h3>4.1.6 Security, Admin & Compliance</h3>
             <ul>
-                <li><strong>Interest Engine:</strong> Automated daily accrual and quarterly posting.</li>
-                <li><strong>Sweep Logic:</strong> Automated transfer from CASA to TD based on threshold.</li>
+                <li><strong>Maker-Checker:</strong> Mandatory dual-control for all financial postings.</li>
+                <li><strong>Terminal Binding:</strong> Access restricted to registered MAC/IP addresses.</li>
             </ul>
-            <h2>4.1.2 Asset Products (Loans)</h2>
-            <p>Integrated Loan Origination System (LOS) with the following features:</p>
+        `,
+
+        'sec5': `
+            <h1>5. External Interface Requirements</h1>
+            <h2>5.1 User Interfaces</h2>
+            <p>Standardized GUI layouts ensure consistent user experience. Error messages are clearly categorized (Validation vs. System errors).</p>
+            <h2>5.2 Hardware Interfaces</h2>
             <ul>
-                <li>Real-time CIBIL Score fetching via ESB.</li>
-                <li>Automated NPA classification (SMA-0, 1, 2) per RBI guidelines.</li>
+                <li><strong>Biometric Devices:</strong> Aadhaar-based authentication integration.</li>
+                <li><strong>Passbook Printers:</strong> Epson/TVS specialized banking peripherals.</li>
+                <li><strong>CTS Scanners:</strong> Integration for automated cheque clearing.</li>
+            </ul>
+            <h2>5.3 Software Interfaces</h2>
+            <p>Integration with <strong>Oracle Data Guard</strong> for real-time data replication and <strong>NPCI Gateways</strong> for payment processing.</p>
+        `,
+
+        'sec6': `
+            <h1>6. Non-Functional Requirements</h1>
+            <h2>6.1 Performance</h2>
+            <ul>
+                <li><strong>Response Time:</strong> < 2 seconds for core transaction postings.</li>
+                <li><strong>Concurrency:</strong> Support for 500+ simultaneous branch users.</li>
+            </ul>
+            <h2>6.3 Security Requirements</h2>
+            <ul>
+                <li><strong>Authentication:</strong> Multi-factor authentication (MFA) for administrative logins.</li>
+                <li><strong>Data Protection:</strong> AES-256 encryption for data-at-rest and TLS 1.2+ for data-in-transit.</li>
+                <li><strong>Audit Trails:</strong> Every transaction logs the UserID, TerminalID, and Timestamp.</li>
+            </ul>
+        `,
+
+        'sec7': `
+            <h1>7. Other Requirements</h1>
+            <h2>7.1 Database Requirements</h2>
+            <p>All financial records must be stored in a normalized Oracle RDBMS to ensure referential integrity and support for high-volume SQL queries.</p>
+            <h2>7.2 Regulatory Requirements</h2>
+            <p>The system must generate mandatory RBI reports, including IRAC classification and NPA aging schedules, on a monthly and quarterly basis.</p>
+        `,
+
+        'sec8': `
+            <h1>8. Appendix A & B</h1>
+            <h2>Appendix A: Glossary</h2>
+            <table>
+                <tr><th>Term</th><th>Description</th></tr>
+                <tr><td><strong>CASA</strong></td><td>Current Account Savings Account</td></tr>
+                <tr><td><strong>CIF</strong></td><td>Customer Information File - 360-degree customer view.</td></tr>
+                <tr><td><strong>Maker-Checker</strong></td><td>Dual control policy where one person initiates and another authorizes.</td></tr>
+            </table>
+            <h2>Appendix B: Analysis Models</h2>
+            <h3>B.3 State-Transition: Loan Lifecycle</h3>
+            <ul>
+                <li><strong>Applied:</strong> Customer submits application.</li>
+                <li><strong>Appraised:</strong> Credit officer verifies details.</li>
+                <li><strong>Sanctioned:</strong> Management approves the limit.</li>
+                <li><strong>Disbursed:</strong> Funds credited to account.</li>
+                <li><strong>Closed:</strong> Loan fully repaid.</li>
             </ul>
         `
     };
 
     function loadPage(pageId) {
-        // 1. Update the content
-        document.getElementById('display').innerHTML = pages[pageId];
+        const display = document.getElementById('display');
+        display.innerHTML = pages[pageId];
 
-        // 2. Update active link styling
         document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-        event.currentTarget.classList.add('active');
+        const activeLink = document.querySelector(`[onclick="loadPage('${pageId}')"]`);
+        if (activeLink) activeLink.classList.add('active');
 
-        // 3. Scroll to top
         document.getElementById('content-area').scrollTo(0,0);
     }
 </script>
