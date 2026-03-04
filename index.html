@@ -2,138 +2,114 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VGIL E-Banker Master SRS Wiki</title>
+    <title>VGIL E-Banker Master Wiki</title>
     <style>
-        :root { --primary: #2c3e50; --accent: #3498db; --bg: #f4f7f6; --text: #333; --white: #ffffff; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; margin: 0; height: 100vh; background: var(--bg); color: var(--text); }
+        :root { --sidebar-bg: #2c3e50; --accent: #3498db; --text: #333; }
+        body { font-family: 'Segoe UI', sans-serif; display: flex; margin: 0; height: 100vh; color: var(--text); }
         
-        /* Sidebar Styles */
-        #sidebar { width: 350px; background: var(--primary); color: white; padding: 25px; display: flex; flex-direction: column; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
-        #sidebar h2 { font-size: 1.4em; margin-bottom: 20px; border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
-        .search-box { width: 100%; padding: 12px; border-radius: 5px; border: none; margin-bottom: 20px; font-size: 1em; box-sizing: border-box; }
-        
-        #nav-container { flex-grow: 1; overflow-y: auto; }
-        .nav-item { padding: 12px 15px; cursor: pointer; border-radius: 5px; margin-bottom: 5px; transition: all 0.2s; font-size: 0.95em; }
-        .nav-item:hover { background: #34495e; padding-left: 20px; color: var(--accent); }
-        .nav-item.active { background: var(--accent); color: white; }
+        /* Sidebar Navigation */
+        #sidebar { width: 300px; background: var(--sidebar-bg); color: white; padding: 20px; overflow-y: auto; flex-shrink: 0; }
+        .nav-group { font-weight: bold; color: var(--accent); margin: 20px 0 10px 0; font-size: 0.9em; text-transform: uppercase; }
+        .nav-link { display: block; padding: 10px; color: #bdc3c7; text-decoration: none; cursor: pointer; border-radius: 4px; }
+        .nav-link:hover { background: #34495e; color: white; }
+        .nav-link.active { background: var(--accent); color: white; }
 
-        /* Main Content Styles */
-        #main { flex: 1; padding: 50px; overflow-y: auto; display: flex; justify-content: center; }
-        .srs-card { background: var(--white); width: 100%; max-width: 900px; padding: 40px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); height: fit-content; }
-        
-        h1 { color: var(--primary); margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-        .intro-text { font-size: 1.1em; color: #666; font-style: italic; line-height: 1.6; margin-bottom: 25px; background: #f9f9f9; padding: 15px; border-left: 5px solid var(--accent); }
-        
-        ul { list-style-type: none; padding: 0; }
-        li { padding: 12px 0; border-bottom: 1px solid #f0f0f0; line-height: 1.6; display: flex; align-items: flex-start; }
-        li::before { content: "•"; color: var(--accent); font-weight: bold; font-size: 1.5em; margin-right: 15px; line-height: 1; }
-        
-        .req-id { font-weight: bold; color: #e67e22; background: #fff3e0; padding: 2px 6px; border-radius: 4px; margin-right: 8px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; }
-        
-        @media (max-width: 1000px) { body { flex-direction: column; } #sidebar { width: 100%; height: auto; } }
+        /* Content Area (The Editor Feel) */
+        #content-area { flex-grow: 1; padding: 60px; overflow-y: auto; line-height: 1.7; background: #fff; }
+        .content-body { max-width: 800px; margin: 0 auto; }
+        h1 { font-size: 2.5em; color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        h2 { color: var(--accent); margin-top: 30px; }
+        p { margin-bottom: 20px; font-size: 1.1em; }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+        strong { color: #000; }
+        .note-box { background: #fdfae3; border-left: 5px solid #f1c40f; padding: 15px; margin: 20px 0; }
     </style>
 </head>
 <body>
 
 <div id="sidebar">
-    <h2>E-Banker SRS</h2>
-    <input type="text" id="search-input" class="search-box" placeholder="🔍 Search Sections..." onkeyup="filterNav()">
-    <div id="nav-container"></div>
+    <h2 style="color:white; margin-top:0;">E-Banker Wiki</h2>
+    
+    <div class="nav-group">Project Foundation</div>
+    <div class="nav-link" onclick="loadPage('sec1')">1. Executive Summary</div>
+    <div class="nav-link" onclick="loadPage('sec2')">2. Introduction</div>
+    <div class="nav-link" onclick="loadPage('sec3')">3. System Description</div>
+
+    <div class="nav-group">Functional Specs</div>
+    <div class="nav-link" onclick="loadPage('sec4')">4. Functional Requirements</div>
+    <div class="nav-link" onclick="loadPage('sec5')">5. External Interfaces</div>
+    <div class="nav-link" onclick="loadPage('sec6')">6. Non-Functional Req.</div>
 </div>
 
-<div id="main">
-    <div id="content-view" class="srs-card">
-        <h1>VGIL CBS Knowledge Base</h1>
-        <p>Select a section from the left to view the E-Banker Core Banking Specification.</p>
+<div id="content-area">
+    <div id="display" class="content-body">
+        <h1>Welcome to E-Banker Wiki</h1>
+        <p>Please select a section from the sidebar to begin reviewing the Software Requirements Specification.</p>
     </div>
 </div>
 
 <script>
-    const srsData = [
-        {
-            id: "sec-1",
-            title: "1. Executive Summary",
-            intro: `The E-Banker (Banker®) Core Banking Solution is a comprehensive, multi-tenant financial platform designed to provide a unified digital backbone for diverse financial institutions, including Commercial Banks, UCBs, DCCBs, NBFCs, and Cooperative Societies (SACCOS).`,
-            bullets: [
-                "<strong>Regulatory Resilience:</strong> Automated compliance with RBI IRAC norms, AML/KYC scrutiny, and localized reporting.",
-                "<strong>Operational Efficiency:</strong> Reducing Time-to-Market for new loan products through integrated LOS.",
-                "<strong>Security by Design:</strong> Multi-layered defense including SIM-binding and mandatory Maker-Checker lifecycle.",
-                "<strong>Interoperability:</strong> Seamless integration with national payment ecosystems (NPCI, RTGS, NEFT)."
-            ]
-        },
-        {
-            id: "sec-2",
-            title: "2. Introduction",
-            intro: "Master Specification for development, deployment, and auditing of the E-Banker CBS module.",
-            bullets: [
-                "Provides a clear roadmap for developers, admins, and regulatory auditors.",
-                "Scope includes end-to-end banking operations (CASA, Loans, Deposits).",
-                "Includes conventions for requirement IDs to ensure 100% audit traceability."
-            ]
-        },
-        {
-            id: "sec-3",
-            title: "3. System Description",
-            intro: "Architectural overview of the 3-Tier E-Banker platform.",
-            bullets: [
-                "Web Tier: Angular JS for high-performance single-page interaction.",
-                "Application Tier: Python REST APIs (Flask/FastAPI) managing business logic.",
-                "Data Tier: Oracle RDBMS providing ACID-compliant financial storage.",
-                "Replication: Oracle Data Guard for real-time DR site synchronization."
-            ]
-        },
-        {
-            id: "sec-4",
-            title: "4. Functional Requirements",
-            intro: "Core business logic for banking products and automated processes.",
-            bullets: [
-                "<span class='req-id'>4.1.1</span> Liability Products: Multi-tier interest and sweep-in/out logic.",
-                "<span class='req-id'>4.1.2</span> Asset Products: Loan Origination with real-time CIBIL fetch.",
-                "<span class='req-id'>4.1.2-NPA</span> Automated NPA logic (SMA-0, 1, 2) based on RBI IRAC norms.",
-                "<span class='req-id'>4.1.3</span> Remittances: NPCI integration for IMPS, RTGS, and NEFT."
-            ]
-        }
-    ];
+    // WORDPRESS-STYLE CONTENT BLOCKS
+    // You can use standard HTML tags here: <h1>, <h2>, <p>, <ul>, <li>, <strong>, <em>
+    const pages = {
+        'sec1': `
+            <h1>1. Executive Summary</h1>
+            <p>The <strong>E-Banker (Banker®)</strong> Core Banking Solution is a comprehensive, multi-tenant financial platform designed to provide a unified digital backbone for diverse financial institutions.</p>
+            <div class="note-box"><strong>Key Vision:</strong> To enable seamless digital banking for UCBs and NBFCs with zero hardware footprint at the branch level.</div>
+            <h2>Core Objectives</h2>
+            <ul>
+                <li><strong>Regulatory Resilience:</strong> Automated compliance with RBI IRAC norms.</li>
+                <li><strong>Operational Efficiency:</strong> Reducing time-to-market for new loan products.</li>
+                <li><strong>Security:</strong> Multi-layered defense including SIM-binding.</li>
+            </ul>
+        `,
 
-    function renderNav(data = srsData) {
-        const container = document.getElementById('nav-container');
-        container.innerHTML = data.map(section => `
-            <div class="nav-item" id="nav-${section.id}" onclick="viewSection('${section.id}')">
-                ${section.title}
-            </div>
-        `).join('');
+        'sec2': `
+            <h1>2. Introduction</h1>
+            <p>This document serves as the master blueprint for the development and deployment of the CBS module.</p>
+            <h2>2.1 Purpose</h2>
+            <p>The primary goal is to define the functional and non-functional requirements for Virtual Galaxy Infotech Limited’s flagship product.</p>
+        `,
+
+        'sec3': `
+            <h1>3. System Description</h1>
+            <p>E-Banker follows a modern 3-tier architecture designed for high availability.</p>
+            <ul>
+                <li><strong>Web Tier:</strong> Angular JS (Single Page Application).</li>
+                <li><strong>Logic Tier:</strong> Python REST APIs (Flask/FastAPI).</li>
+                <li><strong>Data Tier:</strong> Oracle RDBMS (ACID Compliant).</li>
+            </ul>
+        `,
+
+        'sec4': `
+            <h1>4. Functional Requirements</h1>
+            <h2>4.1.1 Liability Products (CASA)</h2>
+            <p>The system supports full lifecycle management of Savings and Current accounts.</p>
+            <ul>
+                <li><strong>Interest Engine:</strong> Automated daily accrual and quarterly posting.</li>
+                <li><strong>Sweep Logic:</strong> Automated transfer from CASA to TD based on threshold.</li>
+            </ul>
+            <h2>4.1.2 Asset Products (Loans)</h2>
+            <p>Integrated Loan Origination System (LOS) with the following features:</p>
+            <ul>
+                <li>Real-time CIBIL Score fetching via ESB.</li>
+                <li>Automated NPA classification (SMA-0, 1, 2) per RBI guidelines.</li>
+            </ul>
+        `
+    };
+
+    function loadPage(pageId) {
+        // 1. Update the content
+        document.getElementById('display').innerHTML = pages[pageId];
+
+        // 2. Update active link styling
+        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+
+        // 3. Scroll to top
+        document.getElementById('content-area').scrollTo(0,0);
     }
-
-    function viewSection(id) {
-        const section = srsData.find(s => s.id === id);
-        const display = document.getElementById('content-view');
-        
-        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        const activeNav = document.getElementById(`nav-${id}`);
-        if(activeNav) activeNav.classList.add('active');
-
-        const bulletHtml = section.bullets.map(b => `<li>${b}</li>`).join('');
-
-        display.innerHTML = `
-            <h1>${section.title}</h1>
-            <div class="intro-text">${section.intro}</div>
-            <ul>${bulletHtml}</ul>
-            <button onclick="window.scrollTo(0,0)" style="margin-top:20px; padding:8px 12px; cursor:pointer;">Back to Top</button>
-        `;
-    }
-
-    function filterNav() {
-        const query = document.getElementById('search-input').value.toLowerCase();
-        const filtered = srsData.filter(s => 
-            s.title.toLowerCase().includes(query) || 
-            s.bullets.some(b => b.toLowerCase().includes(query))
-        );
-        renderNav(filtered);
-    }
-
-    // Crucial: Call renderNav on load
-    window.onload = renderNav;
 </script>
 
 </body>
