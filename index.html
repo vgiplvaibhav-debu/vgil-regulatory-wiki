@@ -1,0 +1,179 @@
+// Wiki for Organization
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Regulatory Wiki v2.1 - Audit & Search</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #3498db; --danger: #e74c3c; --success: #27ae60; --history: #9b59b6; }
+        body { font-family: 'Segoe UI', sans-serif; display: flex; margin: 0; height: 100vh; background: #f4f7f6; }
+        #sidebar { width: 320px; background: var(--primary); color: white; padding: 20px; display: flex; flex-direction: column; }
+        #main { flex: 1; padding: 40px; overflow-y: auto; }
+        .wiki-card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .search-bar { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 4px; border: none; font-size: 0.9em; }
+        .nav-item { padding: 12px; cursor: pointer; border-bottom: 1px solid #34495e; transition: 0.2s; }
+        .nav-item:hover { background: #34495e; }
+        .history-pane { margin-top: 30px; padding: 15px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; }
+        .version-row { font-size: 0.85em; padding: 8px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+        button { padding: 10px 15px; cursor: pointer; border: none; border-radius: 4px; color: white; margin-right: 5px; }
+        .btn-save { background: var(--success); }
+        input, textarea, select { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
+        .status-pill { padding: 4px 10px; border-radius: 15px; font-size: 0.7em; margin-bottom: 10px; color: white; display: inline-block; }
+    </style>
+</head>
+<body>
+
+<div id="sidebar">
+    <h2>E-Banker Wiki</h2>
+    <input type="text" id="search-input" class="search-bar" placeholder="🔍 Search Regulations..." onkeyup="filterNav()">
+    <div id="nav-list" style="overflow-y: auto; flex-grow: 1;"></div>
+    <hr>
+    <button onclick="showEditor()" style="background: var(--accent); width: 100%;">+ Add Regulation</button>
+</div>
+
+<div id="main">
+    <div id="display-panel" class="wiki-card">
+        <h1>Regulatory Knowledge Base</h1>
+        <p>Search or select a topic to view audit history and guidelines.</p>
+    </div>
+
+    <div id="editor-panel" class="wiki-card" style="display:none;">
+        <h2 id="form-title">Propose Update (Maker)</h2>
+        <input type="hidden" id="edit-id">
+        <input type="text" id="form-title-input" placeholder="Regulation Title">
+        <select id="form-source">
+            <option value="RBI">RBI</option>
+            <option value="NPCI">NPCI</option>
+            <option value="SEBI">SEBI</option>
+        </select>
+        <textarea id="form-content" rows="6" placeholder="Guideline Content..."></textarea>
+        <input type="text" id="form-jargon" placeholder="Jargon explanation">
+        <button class="btn-save" onclick="saveEntry()">Save & Notify Compliance</button>
+        <button onclick="hideEditor()" style="background:#95a5a6">Cancel</button>
+    </div>
+</div>
+
+<script>
+    let wikiData = JSON.parse(localStorage.getItem('wikiAuditData')) || [];
+
+    function renderNav(dataToRender = wikiData) {
+        const list = document.getElementById('nav-list');
+        list.innerHTML = dataToRender.map(item => `
+            <div class="nav-item" onclick="viewEntry(${item.id})">
+                ${item.title} <br><small>v${item.version} | ${item.source}</small>
+            </div>
+        `).join('');
+    }
+
+    function filterNav() {
+        const query = document.getElementById('search-input').value.toLowerCase();
+        const filtered = wikiData.filter(item => 
+            item.title.toLowerCase().includes(query) || 
+            item.content.toLowerCase().includes(query) ||
+            item.source.toLowerCase().includes(query)
+        );
+        renderNav(filtered);
+    }
+
+    async function sendNotification(title) {
+        console.log(`Notification Hook Triggered: New update for ${title}.`);
+        // Simulated Fetch: fetch('https://webhook.site/vgil-notify', {method: 'POST'})
+    }
+
+    function saveEntry() {
+        const id = document.getElementById('edit-id').value;
+        const now = new Date().toLocaleString();
+        let entry;
+
+        if (id) {
+            const index = wikiData.findIndex(i => i.id === parseInt(id));
+            const oldVersion = {...wikiData[index]};
+            const historyItem = { version: oldVersion.version, content: oldVersion.content, date: oldVersion.lastUpdated };
+            
+            entry = {
+                ...oldVersion,
+                version: oldVersion.version + 1,
+                content: document.getElementById('form-content').value,
+                jargon: document.getElementById('form-jargon').value,
+                lastUpdated: now,
+                status: 'Pending',
+                history: [...(wikiData[index].history || []), historyItem]
+            };
+            wikiData[index] = entry;
+        } else {
+            entry = {
+                id: Date.now(), version: 1, title: document.getElementById('form-title-input').value,
+                source: document.getElementById('form-source').value, content: document.getElementById('form-content').value,
+                jargon: document.getElementById('form-jargon').value, lastUpdated: now, status: 'Pending', history: []
+            };
+            wikiData.push(entry);
+        }
+
+        localStorage.setItem('wikiAuditData', JSON.stringify(wikiData));
+        sendNotification(entry.title);
+        hideEditor();
+        renderNav();
+    }
+
+    function viewEntry(id) {
+        const item = wikiData.find(i => i.id === id);
+        const display = document.getElementById('display-panel');
+        hideEditor();
+
+        let historyHtml = item.history.length > 0 ? 
+            item.history.map(h => `
+                <div class="version-row">
+                    <span>Version ${h.version} (Archived: ${h.date})</span>
+                </div>
+            `).reverse().join('') : "<p>No prior versions found.</p>";
+
+        display.innerHTML = `
+            <div class="status-pill" style="background:${item.status === 'Approved' ? 'var(--success)' : '#f1c40f'}">${item.status}</div>
+            <h1>${item.title}</h1>
+            <p><strong>Source:</strong> ${item.source} | <strong>Version:</strong> ${item.version}</p>
+            <p>${item.content}</p>
+            <div class="history-pane">
+                <div style="font-weight:bold; color:var(--history)">Audit History</div>
+                ${historyHtml}
+            </div>
+            <div style="margin-top:20px;">
+                <button style="background:var(--accent)" onclick="showEditor(${item.id})">Edit Entry</button>
+                ${item.status === 'Pending' ? `<button style="background:var(--success)" onclick="approve(${item.id})">Approve (Checker)</button>` : ''}
+            </div>
+        `;
+    }
+
+    function approve(id) {
+        const index = wikiData.findIndex(i => i.id === id);
+        wikiData[index].status = 'Approved';
+        localStorage.setItem('wikiAuditData', JSON.stringify(wikiData));
+        viewEntry(id);
+        renderNav();
+    }
+
+    function showEditor(id = null) {
+        document.getElementById('display-panel').style.display = 'none';
+        document.getElementById('editor-panel').style.display = 'block';
+        if (id) {
+            const item = wikiData.find(i => i.id === id);
+            document.getElementById('edit-id').value = item.id;
+            document.getElementById('form-title-input').value = item.title;
+            document.getElementById('form-title-input').disabled = true;
+            document.getElementById('form-content').value = item.content;
+            document.getElementById('form-jargon').value = item.jargon;
+        } else {
+            document.getElementById('edit-id').value = '';
+            document.getElementById('form-title-input').value = '';
+            document.getElementById('form-title-input').disabled = false;
+        }
+    }
+
+    function hideEditor() {
+        document.getElementById('display-panel').style.display = 'block';
+        document.getElementById('editor-panel').style.display = 'none';
+    }
+
+    renderNav();
+</script>
+</body>
+</html>
